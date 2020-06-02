@@ -6,17 +6,21 @@
 #include <GL/glcorearb.h>
 
 #include <gummy/program.h>
+#include <gummy/buffer.h>
 #include <gummy/mesh.h>
 
 struct gum_program {
-	GLuint glprogram;
+	GLuint program;
+};
+
+struct gum_buffer {
+	GLuint buffer;
 };
 
 struct gum_mesh {
-	GLsizei glcount;
-	GLuint glvao;
-	GLuint glvbo;
-	GLuint glebo;
+	GLsizei count;
+	GLuint vao;
+	GLuint ebo;
 };
 
 /* GUMMY_INTERNAL_H */

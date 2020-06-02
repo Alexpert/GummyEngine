@@ -1,5 +1,6 @@
 #include <gummy/render.h>
 #include <gummy/program.h>
+#include <gummy/buffer.h>
 #include <gummy/mesh.h>
 
 #include <unistd.h>
@@ -21,7 +22,7 @@ const char fragment_shader_source[] = "#version 330 core\n"
 "   fragment = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 "}";
 
-float vertices[] = {
+float vertices_positions[] = {
 	-0.5, -0.5, 0.0,
 	 0.5, -0.5, 0.0,
 	 0.0,  0.5, 0.0
@@ -44,12 +45,14 @@ main(int argc, char **argv) {
 	int running = 1;
 
 	struct gum_program *program = gum_program_allocate();
+	struct gum_buffer *vertices_positions_buffer = gum_buffer_allocate();
 	struct gum_mesh *mesh = gum_mesh_allocate();
 
-	gum_program_init(program, vertex_shader_source, fragment_shader_source);
-	gum_mesh_init(mesh, program,
-		vertices, sizeof(vertices) / sizeof(*vertices),
-		indices, sizeof(indices) / sizeof(*indices));
+	gum_program_init_vf(program, vertex_shader_source, fragment_shader_source);
+	gum_buffer_init(vertices_positions_buffer, vertices_positions, sizeof(vertices_positions));
+	gum_mesh_init(mesh, indices, sizeof(indices));
+
+	gum_mesh_attribute_vec3_f32(mesh, program, "vertex_position", vertices_positions_buffer);
 
 	gum_render_viewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	gum_render_program(program);
@@ -73,9 +76,11 @@ main(int argc, char **argv) {
 	}
 
 	gum_mesh_deinit(mesh);
+	gum_buffer_deinit(vertices_positions_buffer);
 	gum_program_deinit(program);
 
 	gum_mesh_deallocate(mesh);
+	gum_buffer_deallocate(vertices_positions_buffer);
 	gum_program_deallocate(program);
 
 	SDL_GL_DeleteContext(glcontext);  

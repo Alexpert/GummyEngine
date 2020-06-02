@@ -1,9 +1,8 @@
 #ifndef GUMMY_MESH_H
 #define GUMMY_MESH_H
 
-#include <stdlib.h>
-
 #include <gummy/program.h>
+#include <gummy/buffer.h>
 
 struct gum_mesh;
 
@@ -14,12 +13,13 @@ void
 gum_mesh_deallocate(struct gum_mesh *mesh);
 
 int
-gum_mesh_init(struct gum_mesh *mesh, struct gum_program *program,
-	float *vertices, size_t vertices_count,
-	unsigned int *indices, size_t indices_count);
+gum_mesh_init(struct gum_mesh *mesh, unsigned int *indices, unsigned long count);
 
 int
 gum_mesh_deinit(struct gum_mesh *mesh);
+
+int
+gum_mesh_attribute_vec3_f32(struct gum_mesh *mesh, struct gum_program *program, const char *attribute, struct gum_buffer *buffer);
 
 /* GUMMY_MESH_H */
 #endif

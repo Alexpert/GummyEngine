@@ -13,34 +13,21 @@ gum_mesh_deallocate(struct gum_mesh *mesh) {
 }
 
 int
-gum_mesh_init(struct gum_mesh *mesh, struct gum_program *program,
-	float *vertices, size_t vertices_count,
-	unsigned int *indices, size_t indices_count) {
+gum_mesh_init(struct gum_mesh *mesh, unsigned int *indices, unsigned long count) {
 
-	mesh->glcount = indices_count;
+	mesh->count = count;
 
-	glGenVertexArrays(1, &mesh->glvao);
-	glGenBuffers(1, &mesh->glvbo);
-	glGenBuffers(1, &mesh->glebo);
+	glGenVertexArrays(1, &mesh->vao);
+	glGenBuffers(1, &mesh->ebo);
 
-	glBindVertexArray(mesh->glvao);
+	glBindVertexArray(mesh->vao);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->glebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices_count * sizeof(*indices), indices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ARRAY_BUFFER, mesh->glvbo);
-	glBufferData(GL_ARRAY_BUFFER, vertices_count * sizeof(*vertices), vertices, GL_STATIC_DRAW);
-
-	GLuint const vertex_position_index = glGetAttribLocation(program->glprogram, "vertex_position");
-	GLint const vertex_position_size = (GLint)(vertices_count / indices_count);
-	glVertexAttribPointer(vertex_position_index, vertex_position_size,
-		GL_FLOAT, GL_FALSE, vertex_position_size * sizeof(*vertices), 0);
-	glEnableVertexAttribArray(vertex_position_index);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(*indices), indices, GL_STATIC_DRAW);
 
 	glBindVertexArray(0); 
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0); 
-	glBindBuffer(GL_ARRAY_BUFFER, 0); 
 
 	return 0;
 }
@@ -48,9 +35,24 @@ gum_mesh_init(struct gum_mesh *mesh, struct gum_program *program,
 int
 gum_mesh_deinit(struct gum_mesh *mesh) {
 
-	glDeleteVertexArrays(1, &mesh->glvao);
-	glDeleteBuffers(1, &mesh->glvbo);
-	glDeleteBuffers(1, &mesh->glebo);
+	glDeleteVertexArrays(1, &mesh->vao);
+	glDeleteBuffers(1, &mesh->ebo);
+
+	return 0;
+}
+
+int
+gum_mesh_attribute_vec3_f32(struct gum_mesh *mesh, struct gum_program *program, const char *attribute, struct gum_buffer *buffer) {
+	GLuint const index = glGetAttribLocation(program->program, attribute);
+
+	glBindVertexArray(mesh->vao);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer->buffer);
+
+	glVertexAttribPointer(index, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	glEnableVertexAttribArray(index);
+
+	glBindVertexArray(0); 
+	glBindBuffer(GL_ARRAY_BUFFER, 0); 
 
 	return 0;
 }

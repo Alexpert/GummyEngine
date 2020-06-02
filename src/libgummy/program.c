@@ -1,6 +1,7 @@
 #include "gummy_internal.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #define GUM_PROGRAM_SHADER_INFO_LOG_SIZE 512
 
@@ -45,16 +46,16 @@ gum_program_deallocate(struct gum_program *program) {
 }
 
 int
-gum_program_init(struct gum_program *program, const char *vertex, const char *fragment) {
+gum_program_init_vf(struct gum_program *program, const char *vertex, const char *fragment) {
 	GLuint glvertex, glfragment;
 	int status = 0;
 
-	program->glprogram = glCreateProgram();
+	program->program = glCreateProgram();
 	status |= gum_program_shader_init(&glvertex, GL_VERTEX_SHADER, vertex);
 	status |= gum_program_shader_init(&glfragment, GL_FRAGMENT_SHADER, fragment);
-	glAttachShader(program->glprogram, glvertex);
-	glAttachShader(program->glprogram, glfragment);
-	glLinkProgram(program->glprogram);
+	glAttachShader(program->program, glvertex);
+	glAttachShader(program->program, glfragment);
+	glLinkProgram(program->program);
 
 	gum_program_shader_deinit(&glvertex);
 	gum_program_shader_deinit(&glfragment);
@@ -64,7 +65,7 @@ gum_program_init(struct gum_program *program, const char *vertex, const char *fr
 
 int
 gum_program_deinit(struct gum_program *program) {
-	glDeleteProgram(program->glprogram);
+	glDeleteProgram(program->program);
 
 	return 0;
 }
