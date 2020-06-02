@@ -1,0 +1,85 @@
+#include <gummy/render.h>
+#include <gummy/program.h>
+#include <gummy/mesh.h>
+
+#include <unistd.h>
+
+#include <SDL2/SDL.h>
+
+#define WINDOW_WIDTH  640
+#define WINDOW_HEIGHT 480
+
+const char vertex_shader_source[] = "#version 330 core\n"
+"in vec3 vertex_position;\n"
+"void main() {\n"
+"   gl_Position = vec4(vertex_position.x, vertex_position.y, vertex_position.z, 1.0);\n"
+"}";
+
+const char fragment_shader_source[] = "#version 330 core\n"
+"out vec4 fragment;\n"
+"void main() {\n"
+"   fragment = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"}";
+
+float vertices[] = {
+	-0.5, -0.5, 0.0,
+	 0.5, -0.5, 0.0,
+	 0.0,  0.5, 0.0
+};
+
+unsigned int indices[] = {
+	0, 1, 2
+};
+
+int
+main(int argc, char **argv) {
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+	SDL_Window *window = SDL_CreateWindow("Gummy Triangle",
+		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, 
+		SDL_WINDOW_OPENGL);
+	SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+	int running = 1;
+
+	struct gum_program *program = gum_program_allocate();
+	struct gum_mesh *mesh = gum_mesh_allocate();
+
+	gum_program_init(program, vertex_shader_source, fragment_shader_source);
+	gum_mesh_init(mesh, program,
+		vertices, sizeof(vertices) / sizeof(*vertices),
+		indices, sizeof(indices) / sizeof(*indices));
+
+	gum_render_viewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+	gum_render_program(program);
+
+	while(running != 0) {
+		SDL_Event event;
+		SDL_Delay(17);
+
+		gum_render_clear();
+		gum_render_mesh(mesh);
+
+		SDL_GL_SwapWindow(window);
+
+		while(SDL_PollEvent(&event)) {
+			switch(event.type) {
+			case SDL_QUIT:
+				running = 0;
+				break;
+			}
+		}
+	}
+
+	gum_mesh_deinit(mesh);
+	gum_program_deinit(program);
+
+	gum_mesh_deallocate(mesh);
+	gum_program_deallocate(program);
+
+	SDL_GL_DeleteContext(glcontext);  
+
+	return 0;
+}
+
