@@ -6,11 +6,16 @@
 #include <GL/glcorearb.h>
 
 #include <gummy/program.h>
+#include <gummy/texture.h>
 #include <gummy/buffer.h>
 #include <gummy/mesh.h>
 
 struct gum_program {
 	GLuint program;
+};
+
+struct gum_texture {
+	GLuint texture;
 };
 
 struct gum_buffer {

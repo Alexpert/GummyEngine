@@ -2,6 +2,7 @@
 #define GUMMY_RENDER_H
 
 #include <gummy/program.h>
+#include <gummy/texture.h>
 #include <gummy/mesh.h>
 
 void
@@ -11,7 +12,7 @@ void
 gum_render_clear(void);
 
 void
-gum_render(struct gum_mesh *mesh, struct gum_program *program);
+gum_render(struct gum_mesh *mesh, struct gum_program *program, struct gum_texture **textures, unsigned int count);
 
 /* GUMMY_RENDER_H */
 #endif

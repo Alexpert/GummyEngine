@@ -57,3 +57,19 @@ gum_mesh_attribute_vec3(struct gum_mesh *mesh, struct gum_program *program, cons
 	return 0;
 }
 
+int
+gum_mesh_attribute_vec2(struct gum_mesh *mesh, struct gum_program *program, const char *attribute, struct gum_buffer *buffer) {
+	GLuint const index = glGetAttribLocation(program->program, attribute);
+
+	glBindVertexArray(mesh->vao);
+	glBindBuffer(GL_ARRAY_BUFFER, buffer->buffer);
+
+	glVertexAttribPointer(index, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+	glEnableVertexAttribArray(index);
+
+	glBindVertexArray(0); 
+	glBindBuffer(GL_ARRAY_BUFFER, 0); 
+
+	return 0;
+}
+

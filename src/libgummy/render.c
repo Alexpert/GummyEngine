@@ -12,7 +12,13 @@ gum_render_clear(void) {
 }
 
 void
-gum_render(struct gum_mesh *mesh, struct gum_program *program) {
+gum_render(struct gum_mesh *mesh, struct gum_program *program, struct gum_texture **textures, unsigned int count) {
+
+	for(unsigned int i = 0; i < count; ++i) {
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, textures[i]->texture);
+	}
+
 	glUseProgram(program->program);
 	glBindVertexArray(mesh->vao);
 
@@ -20,5 +26,10 @@ gum_render(struct gum_mesh *mesh, struct gum_program *program) {
 
 	glUseProgram(0);
 	glBindVertexArray(0);
+
+	while(count != 0) {
+		glActiveTexture(GL_TEXTURE0 + --count);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 }
 
