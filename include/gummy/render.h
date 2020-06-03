@@ -11,10 +11,7 @@ void
 gum_render_clear(void);
 
 void
-gum_render_program(struct gum_program *program);
-
-void
-gum_render_mesh(struct gum_mesh *mesh);
+gum_render(struct gum_mesh *mesh, struct gum_program *program);
 
 /* GUMMY_RENDER_H */
 #endif

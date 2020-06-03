@@ -13,7 +13,7 @@ gum_buffer_deallocate(struct gum_buffer *buffer) {
 }
 
 int
-gum_buffer_init(struct gum_buffer *buffer, void *elements, unsigned long size) {
+gum_buffer_init(struct gum_buffer *buffer, const void *elements, unsigned long size) {
 
 	glGenBuffers(1, &buffer->buffer);
 

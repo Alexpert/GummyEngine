@@ -70,3 +70,14 @@ gum_program_deinit(struct gum_program *program) {
 	return 0;
 }
 
+int
+gum_program_uniform_vec4(struct gum_program *program, const char *uniform, const float *elements) {
+	GLint const location = glGetUniformLocation(program->program, uniform);
+
+	glUseProgram(program->program);
+	glUniform4fv(location, 1, elements);
+	glUseProgram(0);
+
+	return 0;
+}
+

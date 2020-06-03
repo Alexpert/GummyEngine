@@ -19,7 +19,7 @@ int
 gum_mesh_deinit(struct gum_mesh *mesh);
 
 int
-gum_mesh_attribute_vec3_f32(struct gum_mesh *mesh, struct gum_program *program, const char *attribute, struct gum_buffer *buffer);
+gum_mesh_attribute_vec3(struct gum_mesh *mesh, struct gum_program *program, const char *attribute, struct gum_buffer *buffer);
 
 /* GUMMY_MESH_H */
 #endif

@@ -10,7 +10,7 @@ void
 gum_buffer_deallocate(struct gum_buffer *buffer);
 
 int
-gum_buffer_init(struct gum_buffer *buffer, void *elements, unsigned long size);
+gum_buffer_init(struct gum_buffer *buffer, const void *elements, unsigned long size);
 
 int
 gum_buffer_deinit(struct gum_buffer *buffer);

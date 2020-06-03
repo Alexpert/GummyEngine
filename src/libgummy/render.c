@@ -7,18 +7,18 @@ gum_render_viewport(unsigned int x, unsigned int y, unsigned int width, unsigned
 
 void
 gum_render_clear(void) {
-	glClearColor(0.2, 0.3, 0.3, 1.0);
+	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void
-gum_render_program(struct gum_program *program) {
+gum_render(struct gum_mesh *mesh, struct gum_program *program) {
 	glUseProgram(program->program);
-}
-
-void
-gum_render_mesh(struct gum_mesh *mesh) {
 	glBindVertexArray(mesh->vao);
+
 	glDrawElements(GL_TRIANGLES, mesh->count, GL_UNSIGNED_INT, 0);
+
+	glUseProgram(0);
+	glBindVertexArray(0);
 }
 

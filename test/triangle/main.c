@@ -18,8 +18,9 @@ const char vertex_shader_source[] = "#version 330 core\n"
 
 const char fragment_shader_source[] = "#version 330 core\n"
 "out vec4 fragment;\n"
+"uniform vec4 color;\n"
 "void main() {\n"
-"   fragment = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"   fragment = color;\n"
 "}";
 
 float vertices_positions[] = {
@@ -30,6 +31,10 @@ float vertices_positions[] = {
 
 unsigned int indices[] = {
 	0, 1, 2
+};
+
+float color[] = {
+	1.0, 0.0, 1.0, 1.0
 };
 
 int
@@ -52,17 +57,18 @@ main(int argc, char **argv) {
 	gum_buffer_init(vertices_positions_buffer, vertices_positions, sizeof(vertices_positions));
 	gum_mesh_init(mesh, indices, sizeof(indices));
 
-	gum_mesh_attribute_vec3_f32(mesh, program, "vertex_position", vertices_positions_buffer);
+	gum_program_uniform_vec4(program, "color", color);
+
+	gum_mesh_attribute_vec3(mesh, program, "vertex_position", vertices_positions_buffer);
 
 	gum_render_viewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-	gum_render_program(program);
 
 	while(running != 0) {
 		SDL_Event event;
 		SDL_Delay(17);
 
 		gum_render_clear();
-		gum_render_mesh(mesh);
+		gum_render(mesh, program);
 
 		SDL_GL_SwapWindow(window);
 
